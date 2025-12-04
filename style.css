@@ -46,7 +46,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 10px;
-   background: var(--secondary); 
+  background: var(--secondary);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
