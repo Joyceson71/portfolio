@@ -38,8 +38,9 @@ html {
   color: var(--font-color);
 }
 
+/* Note: background is handled by .animated-bg layer now */
 body {
-  background: var(--background);
+  background: transparent;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -51,6 +52,55 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
   border-radius: 999px;
+}
+
+/* =========================================================
+   ANIMATED BACKGROUND + PARTICLES
+========================================================= */
+
+.animated-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(
+    -45deg,
+    #0f172a,
+    #020617,
+    #0ea5e9,
+    #000000
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 16s ease infinite;
+}
+
+/* light theme version of bg, still matching your palette */
+body.light-theme .animated-bg {
+  background: linear-gradient(
+    -45deg,
+    #f9fafb,
+    #e5e7eb,
+    #bae6fd,
+    #ffffff
+  );
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* =========================================================
