@@ -1,335 +1,259 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Joyceson | Portfolio</title>
+  <meta charset="UTF-8" />
+  <title>Joyceson | Frontend Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Icons & Font -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Michroma&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="jd-removebg-preview.png" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- JS -->
+  <script src="main.js" defer></script>
 </head>
+
 <body>
-  <!-- animated gradient background + blobs -->
-  <div class="animated-bg" aria-hidden="true"></div>
-  <div class="blob b1" aria-hidden="true"></div>
-  <div class="blob b2" aria-hidden="true"></div>
-  <div class="blob b3" aria-hidden="true"></div>
+  <!-- ANIMATED BG + PARTICLES (behind everything) -->
+  <div class="animated-bg"></div>
+  <canvas id="particles"></canvas>
 
-  <!-- placeholders for lazy 3D models (will be replaced on scroll) -->
-  <div id="bg-ph-1" class="bg-ph" data-src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" style="left:-60px;top:6%;width:420px;height:420px;"></div>
-  <div id="bg-ph-2" class="bg-ph" data-src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb" style="right:-80px;top:22%;width:420px;height:420px;"></div>
-  <div id="bg-ph-3" class="bg-ph" data-src="https://modelviewer.dev/shared-assets/models/MetalRoughSpheres.glb" style="left:6%;bottom:-40px;width:360px;height:360px;"></div>
-
-  <!-- preloader -->
-  <div id="preloader" role="status" aria-live="polite">
-    <div class="loader" aria-hidden="true"></div>
-    <div class="pre-text">Loading portfolio...</div>
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="loader-ring"></div>
+    <span>Welcome to my portfolio...</span>
   </div>
 
-  <!-- header -->
+  <!-- HEADER -->
   <header>
-    <div class="container">
-      <a class="logo" href="#home"><span>J</span>oyceson</a>
+    <a href="#home" class="logo"><span>Joy</span>ceson</a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#project">Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
+    <nav class="center-section">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#project">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-      <div class="right">
-        <button id="themeBtn" class="icon-btn" title="Toggle theme"><i class="fas fa-sun"></i></button>
-        <button id="menuBtn" class="icon-btn menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
-      </div>
+    <div class="right-section">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <i class="fas fa-sun"></i>
+      </button>
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HOME -->
   <section id="home">
-    <div class="home-inner container">
-      <div class="text reveal">
+    <div class="home-inner">
+      <div class="text-section reveal">
         <h1>Portfolio 2025</h1>
         <h2>Hi, I’m <span>Joyceson</span></h2>
         <h3>Frontend Developer & UI Enthusiast</h3>
-        <p>I design and build responsive, performance-focused web interfaces with a strong attention to detail. Clean layouts, smooth interactions and practical solutions.</p>
+        <p>
+          I design and build responsive, performance-focused web interfaces with a strong
+          attention to detail. My focus is on clean layouts, smooth interactions, and
+          practical, real-world solutions.
+        </p>
 
-        <div class="btns">
-          <a href="#contact" class="btn primary lift"><i class="fas fa-paper-plane"></i> Hire Me</a>
-          <a href="#" class="btn outline lift">View Resume</a>
+        <div class="btn-section">
+          <a href="#contact" class="btn-primary lift-hover">
+            Hire Me
+            <i class="fas fa-arrow-right"></i>
+          </a>
+          <a href="#" class="btn-outline lift-hover">
+            View Resume
+          </a>
         </div>
 
-        <div class="home-stats">Projects: 12+ • Tech: React • JS • CSS</div>
+        <div class="home-stats">
+          <span>Projects: 10+</span>
+          <span>Tech: React • JS • CSS</span>
+        </div>
       </div>
 
-      <div class="avatar reveal lift">
-        <div class="inner">
-          <img src="jd-removebg-preview.png" alt="Joyceson">
+      <div class="home-avatar reveal lift-hover jd-image">
+        <div class="home-avatar-inner">
+          <div class="avatar-glow-ring"></div>
+          <img src="jd-removebg-preview.png" alt="Joyceson"/>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="container section">
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <h2>About <span>Me</span></h2>
-        <p>I’m an aspiring frontend developer with a strong interest in modern web technologies. I enjoy turning ideas into interfaces that feel intuitive and fast, focusing on responsive layouts and reusable components.</p>
+  <section id="about">
+    <div class="about-inner">
+      <div class="about-text-section reveal">
+        <h1>About <span>Me</span></h1>
+        <p>
+          I’m an aspiring frontend developer with a strong interest in modern web
+          technologies. I enjoy turning ideas into interfaces that feel intuitive and
+          fast, with a focus on responsive layouts and reusable components.
+        </p>
+        <p>
+          I regularly work with HTML, CSS, JavaScript, and React, and I’m actively
+          exploring backend tools like Node.js and Django to become more full-stack.
+        </p>
 
-        <div class="pills">
-          <span class="pill">Pixel-perfect Layouts</span>
-          <span class="pill">Responsive Design</span>
-          <span class="pill">Performance Mindset</span>
+        <div class="about-highlights">
+          <span class="about-pill">Pixel-perfect Layouts</span>
+          <span class="about-pill">Responsive Design</span>
+          <span class="about-pill">Performance Mindset</span>
         </div>
 
-        <div class="socials">
-          <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <div class="about-social-icons">
+          <a href="#" target="_blank" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="#" target="_blank" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
         </div>
       </div>
 
-      <div class="about-img reveal lift glass">
-        <img src="jd-removebg-preview.png" alt="Working">
+      <div class="about-img-section reveal lift-hover glass-card">
+        <img src="jd-removebg-preview.png" alt="Joyceson working" />
       </div>
     </div>
   </section>
 
   <!-- SKILLS -->
-  <section id="skills" class="section">
-    <div class="container">
-      <div class="skills-top reveal">
-        <h2>Skills</h2>
-        <div class="controls">
-          <div class="filter-group" id="skillFilters">
-            <button class="skill-btn active" data-filter="all">All</button>
-            <button class="skill-btn" data-filter="frontend">Frontend</button>
-            <button class="skill-btn" data-filter="backend">Backend</button>
-            <button class="skill-btn" data-filter="mobile">Mobile</button>
-            <button class="skill-btn" data-filter="ai">AI/ML</button>
-            <button class="skill-btn" data-filter="tools">Tools</button>
-          </div>
-          <select id="skillSort" aria-label="Sort skills">
-            <option value="proficiency">Sort: Proficiency</option>
-            <option value="alpha">Sort: A → Z</option>
-          </select>
+  <section id="skills">
+    <h1 class="reveal">Skills</h1>
+    <div class="skill-container">
+      <div class="skill-box glass-card lift-hover reveal">
+        <h1>Frontend Development</h1>
+        <i class="fab fa-react"></i>
+        <div class="skill-progress">
+          <div class="skill-progress-fill" data-skill="80"></div>
+          <div class="skill-progress-text">80%</div>
         </div>
+        <p class="skill-tags">HTML • CSS • JavaScript • React • Responsive UI</p>
       </div>
 
-      <div id="skillGrid" class="skill-grid">
-        <!-- skill-card examples -->
-        <div class="skill-card reveal" data-category="frontend" data-name="HTML5" data-proficiency="92">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>HTML5</h3>
-            <p class="muted">Semantic markup · Accessibility</p>
-          </div>
-          <div class="skill-tooltip">Years: 4 · ARIA, semantics</div>
+      <div class="skill-box glass-card lift-hover reveal">
+        <h1>Backend Development</h1>
+        <i class="fab fa-node-js"></i>
+        <div class="skill-progress">
+          <div class="skill-progress-fill" data-skill="60"></div>
+          <div class="skill-progress-text">60%</div>
         </div>
+        <p class="skill-tags">Node.js • Express • REST APIs • SQL basics</p>
+      </div>
 
-        <div class="skill-card reveal" data-category="frontend" data-name="CSS3" data-proficiency="90">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>CSS3</h3>
-            <p class="muted">Layouts · Animations</p>
-          </div>
-          <div class="skill-tooltip">Flexbox · Grid · Animations</div>
+      <div class="skill-box glass-card lift-hover reveal">
+        <h1>UI / UX Tools & Design </h1>
+        <i class="fab fa-figma"></i>
+        <div class="skill-progress">
+          <div class="skill-progress-fill" data-skill="70"></div>
+          <div class="skill-progress-text">70%</div>
         </div>
-
-        <div class="skill-card reveal" data-category="frontend" data-name="JavaScript" data-proficiency="88">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>JavaScript</h3>
-            <p class="muted">ES6+ · DOM · Async</p>
-          </div>
-          <div class="skill-tooltip">Async patterns · Tooling</div>
+        <p class="skill-tags">Wireframes • Prototypes • Figma • Design Systems</p>
+      </div>
+      <div class="skill-box glass-card lift-hover reveal">
+        <h1>Mobile-App Development</h1>
+        <i class="fab fa-android"></i>
+        <div class="skill-progress">
+          <div class="skill-progress-fill" data-skill="70"></div>
+          <div class="skill-progress-text">70%</div>
         </div>
-
-        <div class="skill-card reveal" data-category="backend" data-name="Node.js" data-proficiency="70">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>Node.js</h3>
-            <p class="muted">Express · APIs</p>
-          </div>
-          <div class="skill-tooltip">REST · Middleware</div>
-        </div>
-
-        <div class="skill-card reveal" data-category="mobile" data-name="Flutter" data-proficiency="74">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>Flutter</h3>
-            <p class="muted">Dart · Widgets</p>
-          </div>
-          <div class="skill-tooltip">Cross-platform UI</div>
-        </div>
-
-        <div class="skill-card reveal" data-category="ai" data-name="AI/ML" data-proficiency="50">
-          <div class="skill-svg">
-            <svg class="circular" viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
-              <text class="percentage" x="18" y="20.35">0%</text>
-            </svg>
-          </div>
-          <div class="skill-meta">
-            <h3>AI / ML</h3>
-            <p class="muted">Models · Experiments</p>
-          </div>
-          <div class="skill-tooltip">Prototype ML systems</div>
-        </div>
+        <p class="skill-tags">React-Native • Prototypes • Flutter • Flutterflow</p>
       </div>
     </div>
   </section>
 
   <!-- PROJECTS -->
-  <section id="project" class="section">
-    <div class="container">
-      <h2 class="reveal">Projects</h2>
+  <section id="project">
+    <h1 class="reveal">Projects</h1>
 
-      <div class="proj-filter reveal">
-        <button class="filter active" data-filter="all">All</button>
-        <button class="filter" data-filter="web">Web Apps</button>
-        <button class="filter" data-filter="ui">UI Design</button>
-        <button class="filter" data-filter="mobile">Mobile</button>
-      </div>
+    <div class="projects-filter reveal">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="web">Web Apps</button>
+      <button class="filter-btn" data-filter="ui">UI Design</button>
+    </div>
 
-      <div class="projects-wrap reveal">
-        <button class="proj-nav" id="projPrev" aria-label="Prev"><i class="fas fa-chevron-left"></i></button>
-
-        <div class="proj-list" id="projList" role="list" aria-label="Project carousel">
-          <!-- 6 professional projects -->
-          <article class="proj-card" data-category="web" data-images='["proj-finance-1.jpg","proj-finance-2.jpg"]' data-title="EduFinance" data-desc="Student finance dashboard">
-            <div class="proj-thumb"><img src="proj-finance-1.jpg" alt="EduFinance"></div>
-            <div class="proj-body">
-              <h3>Edu<span>Finance</span></h3>
-              <p class="muted">Student loan tracking, repayment planning and analytics for institutions.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
-
-          <article class="proj-card" data-category="web ui" data-images='["proj-attendance-1.jpg"]' data-title="Smart Attendance" data-desc="QR & geofence attendance">
-            <div class="proj-thumb"><img src="proj-attendance-1.jpg" alt="Smart Attendance"></div>
-            <div class="proj-body">
-              <h3>Smart <span>Attendance</span></h3>
-              <p class="muted">QR + geofence attendance system with analytics and gamification.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
-
-          <article class="proj-card" data-category="web" data-images='["proj-ecom-1.jpg"]' data-title="Commerce UI" data-desc="Scalable storefront UI">
-            <div class="proj-thumb"><img src="proj-ecom-1.jpg" alt="E-Commerce"></div>
-            <div class="proj-body">
-              <h3>E-<span>Commerce</span></h3>
-              <p class="muted">Fast, accessible storefront UI with modular components.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
-
-          <article class="proj-card" data-category="mobile" data-images='["proj-mobile-1.jpg"]' data-title="ClassConnect" data-desc="Parent-teacher app">
-            <div class="proj-thumb"><img src="proj-mobile-1.jpg" alt="ClassConnect"></div>
-            <div class="proj-body">
-              <h3>Class<span>Connect</span></h3>
-              <p class="muted">Flutter app for parent-teacher communication & event scheduling.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
-
-          <article class="proj-card" data-category="web ui" data-images='["proj-ai-1.jpg"]' data-title="StudyAI" data-desc="AI learning assistant">
-            <div class="proj-thumb"><img src="proj-ai-1.jpg" alt="StudyAI"></div>
-            <div class="proj-body">
-              <h3>Study<span>AI</span></h3>
-              <p class="muted">AI chat assistant for adaptive study & quizzes.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
-
-          <article class="proj-card" data-category="web" data-images='["proj-dashboard-1.jpg"]' data-title="Analytics Hub" data-desc="Admin analytics">
-            <div class="proj-thumb"><img src="proj-dashboard-1.jpg" alt="Analytics Hub"></div>
-            <div class="proj-body">
-              <h3>Analytics <span>Hub</span></h3>
-              <p class="muted">Role-based dashboards, CSV export and visualizations for institutions.</p>
-              <div class="proj-actions"><a class="btn outline view" href="#">View</a><a class="btn primary" href="#">Case</a></div>
-            </div>
-          </article>
+    <div class="projects-list">
+      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
+        <div class="projectImg">
+          <img src="project-1.jpg" alt="Smart Attendance System" />
         </div>
+        <div class="projectText">
+          <h1>Smart <span>Attendance System</span></h1>
+          <p>
+            A web-based attendance platform using QR and facial recognition concepts
+            to streamline student check-ins and reduce manual errors.
+          </p>
+          <a href="#" class="btn-outline">View Project</a>
+        </div>
+      </div>
 
-        <button class="proj-nav" id="projNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+      <div class="projects-card glass-card lift-hover reveal" data-category="web">
+        <div class="projectImg">
+          <img src="project-2.jpg" alt="E-Commerce UI" />
+        </div>
+        <div class="projectText">
+          <h1>E<span>-Commerce</span> Frontend</h1>
+          <p>
+            A modern storefront with product listing, filters, search, and cart
+            simulation using localStorage. Fully responsive with clean, minimal UI.
+          </p>
+          <a href="#" class="btn-outline">View Project</a>
+        </div>
+      </div>
+
+      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
+        <div class="projectImg">
+          <img src="project-3.jpg" alt="Netflix Clone" />
+        </div>
+        <div class="projectText">
+          <h1>Net<span>flix</span> Inspired UI</h1>
+          <p>
+            A Netflix-style interface with category rows, hover effects, hero banner,
+            and movie sections designed to feel smooth and engaging.
+          </p>
+          <a href="#" class="btn-outline">View Project</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- project modal -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="inner">
-      <button id="modalClose" class="close" aria-label="Close">&times;</button>
-      <h3 id="mTitle"></h3>
-      <p id="mDesc"></p>
-      <div class="modal-carousel">
-        <button id="mPrev" class="proj-nav" aria-label="Prev image"><i class="fas fa-chevron-left"></i></button>
-        <img id="mImg" src="" alt="" class="modal-img" />
-        <button id="mNext" class="proj-nav" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
-      </div>
-      <div class="modal-actions">
-        <a id="mLive" class="btn outline" href="#" target="_blank">Open Live</a>
-        <a id="mCode" class="btn primary" href="#" target="_blank">View Code</a>
-      </div>
-    </div>
-  </div>
+  <!-- CONTACT -->
+  <section id="contact">
+    <h1 class="reveal">Contact Me</h1>
+    <p class="reveal">
+      If you’d like to collaborate, discuss a project, or just say hi, feel free
+      to reach out using the form below.
+    </p>
 
-  <!-- contact -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2 class="reveal">Contact Me</h2>
-      <p class="reveal muted">If you’d like to collaborate, discuss a project, or just say hi — send a message.</p>
-      <form id="contactForm" class="contact-form reveal glass">
-        <input name="name" placeholder="Your Name" required/>
-        <input name="email" type="email" placeholder="Your Email" required/>
-        <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
-        <button type="submit" class="btn primary">Send Message</button>
-      </form>
-    </div>
+    <form class="glass-card reveal">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Your Message" rows="4" required></textarea>
+      <button type="submit" class="btn-primary submit-btn lift-hover">
+        Send Message
+      </button>
+    </form>
   </section>
 
-  <footer class="section" style="text-align:center">
-    <div class="container muted">© 2025 Joyceson</div>
+  <!-- FOOTER -->
+  <footer>
+    © 2025 Joyceson. Built with clean code, focus, and a bit of creativity.
   </footer>
-
-  <!-- JS -->
-  <script src="main.js" defer></script>
 </body>
 </html>
