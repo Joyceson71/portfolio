@@ -1,3 +1,4 @@
+/* main.js - Optimized particle engine (replace your previous main.js) */
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const themeToggle = document.getElementById("themeToggle");
@@ -10,28 +11,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const revealEls = document.querySelectorAll(".reveal");
 
   /* ============ PRELOADER ============ */
-  window.addEventListener("load", () => {
-    setTimeout(() => preloader.classList.add("hidden"), 400);
-  });
+  window.addEventListener("load", () => setTimeout(() => preloader.classList.add("hidden"), 400));
 
   /* ============ THEME TOGGLE ============ */
   const savedTheme = localStorage.getItem("jd-theme");
   if (savedTheme === "light") {
     body.classList.add("light-theme");
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
   }
-  themeToggle.addEventListener("click", () => {
+  themeToggle?.addEventListener("click", () => {
     body.classList.toggle("light-theme");
     const isLight = body.classList.contains("light-theme");
     themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     localStorage.setItem("jd-theme", isLight ? "light" : "dark");
-    // update particle color live
-    if (particlesSystem) particlesSystem.updateColors();
-    if (starsSystem) starsSystem.updateColors();
+    particlesSystem?.updateColors();
+    starsSystem?.updateColors?.();
   });
 
   /* ============ MOBILE MENU ============ */
-  menuToggle.addEventListener("click", () => nav.classList.toggle("open"));
+  menuToggle?.addEventListener("click", () => nav.classList.toggle("open"));
   navLinks.forEach((link) => link.addEventListener("click", () => nav.classList.remove("open")));
 
   /* ============ SCROLL REVEAL + SKILL BARS ============ */
@@ -65,78 +63,111 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ============ PARTICLES + STARS SYSTEM ============ */
+  /* ============ PARTICLES + STARS SYSTEM (Optimized) ============ */
   const canvas = document.getElementById("particles");
   const starsCanvas = document.getElementById("stars");
 
-  // Particles system object to allow control
   let particlesSystem = null;
   let starsSystem = null;
 
-  // safe guard for old browsers
-  if (canvas && canvas.getContext && starsCanvas && starsCanvas.getContext) {
-    // --- Stars (subtle twinkle) ---
+  // feature-detect and guard
+  if (canvas?.getContext && starsCanvas?.getContext) {
+    /* ---------- STARS (light and cheap) ---------- */
     starsSystem = (function initStars() {
       const ctx = starsCanvas.getContext("2d");
-      let w = 0, h = 0, stars = [];
-      const STAR_COUNT = 120;
+      let w = 0, h = 0;
+      let stars = [];
+      const STAR_COUNT_BASE = 80;
+
       function resize() {
-        w = starsCanvas.width = window.innerWidth;
-        h = starsCanvas.height = window.innerHeight;
-        // regenerate stars for new size
-        stars = [];
-        for (let i = 0; i < STAR_COUNT; i++) {
-          stars.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            r: Math.random() * 1.5 + 0.3,
-            alpha: Math.random() * 0.8 + 0.1,
-            drift: Math.random() * 0.02 + 0.005
-          });
-        }
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        w = starsCanvas.width = Math.floor(window.innerWidth * dpr);
+        h = starsCanvas.height = Math.floor(window.innerHeight * dpr);
+        starsCanvas.style.width = window.innerWidth + "px";
+        starsCanvas.style.height = window.innerHeight + "px";
+        // regenerate stars (scale with viewport area)
+        const areaFactor = Math.max(0.5, Math.min(2.4, (window.innerWidth * window.innerHeight) / (1366 * 768)));
+        const count = Math.floor(STAR_COUNT_BASE * areaFactor);
+        stars = new Array(count).fill(0).map(() => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: (Math.random() * 1.2 + 0.3) * dpr,
+          alpha: Math.random() * 0.7 + 0.1,
+          twinkle: Math.random() * 0.02 + 0.002
+        }));
       }
-      function updateColors() { /* nothing color-specific for stars but kept for API parity */ }
+
+      function updateColors() { /* no color updates needed */ }
+
       function draw() {
         ctx.clearRect(0, 0, w, h);
-        stars.forEach((s, i) => {
-          // twinkle
-          s.alpha += (Math.random() - 0.5) * s.drift;
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          s.alpha += (Math.random() - 0.5) * s.twinkle;
           if (s.alpha < 0.05) s.alpha = 0.05;
           if (s.alpha > 1) s.alpha = 1;
           ctx.beginPath();
           ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
-        });
+        }
         requestAnimationFrame(draw);
       }
-      window.addEventListener("resize", resize);
-      resize();
-      draw();
+
+      window.addEventListener("resize", debounce(resize, 150));
+      resize(); draw();
       return { updateColors };
     })();
 
-    // --- Particles network system ---
+    /* ---------- PARTICLES (optimized with spatial hashing) ---------- */
     particlesSystem = (function initParticles() {
       const ctx = canvas.getContext("2d");
       let w = 0, h = 0;
-      let particles = [];
-      let rafId = null;
+      let rafId = 0;
       let paused = false;
       let lowPerf = false;
 
-      // controls & defaults (in sync with HTML controls)
-      let COUNT = 90;
+      // defaults (connected to UI)
+      let COUNT = Math.max(40, Math.round((window.innerWidth / 1366) * 90)); // scale a bit with width
       let MAX_DISTANCE = 130;
       let BASE_SPEED = 0.8;
 
+      // performance caps
+      const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+      const SAFE_MAX = 220; // hard cap
+      COUNT = Math.min(COUNT, SAFE_MAX);
+
+      // spatial hash parameters
+      let gridSize = MAX_DISTANCE; // cell size
+      let grid = new Map();
+
+      // particles pool
+      let particles = [];
+
+      // mouse (throttled)
       const mouse = { x: null, y: null, radius: 180 };
+      let _mouseX = null, _mouseY = null, mouseDirty = false;
+      window.addEventListener("mousemove", (e) => { _mouseX = e.clientX; _mouseY = e.clientY; mouseDirty = true; });
+      window.addEventListener("mouseleave", () => { _mouseX = null; _mouseY = null; mouseDirty = true; });
+
+      // pause when tab hidden
+      document.addEventListener("visibilitychange", () => {
+        paused = document.hidden;
+      });
 
       function resize() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
+        // limit canvas resolution by DPR to avoid huge pixels
+        const capDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        w = canvas.width = Math.floor(window.innerWidth * capDpr);
+        h = canvas.height = Math.floor(window.innerHeight * capDpr);
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+        // reinit grid cell size
+        gridSize = Math.max(60, Math.min(300, MAX_DISTANCE));
+        buildGrid(); // rebuild grid map placeholder
+        regenerateParticles();
       }
-      window.addEventListener("resize", resize);
+      window.addEventListener("resize", debounce(resize, 150));
       resize();
 
       function getParticleColor() {
@@ -151,61 +182,113 @@ document.addEventListener("DOMContentLoaded", () => {
         reset(initial = false) {
           this.x = Math.random() * w;
           this.y = Math.random() * h;
-          this.z = Math.random() * 1; // 3D parallax layer factor 0..1
-          this.size = Math.random() * 2.8 + 0.8;
+          this.z = Math.random(); // pseudo-depth
+          this.size = (Math.random() * 2.5 + 0.6) * (DPR);
           this.speedX = (Math.random() - 0.5) * BASE_SPEED * (0.6 + this.z);
           this.speedY = (Math.random() - 0.5) * BASE_SPEED * (0.6 + this.z);
-          if (!initial && Math.random() > 0.6) {
-            const edge = Math.floor(Math.random() * 4);
-            if (edge === 0) this.y = 0;
-            if (edge === 1) this.y = h;
-            if (edge === 2) this.x = 0;
-            if (edge === 3) this.x = w;
-          }
         }
         update() {
           this.x += this.speedX;
           this.y += this.speedY;
-          if (this.x < -30 || this.x > w + 30 || this.y < -30 || this.y > h + 30) this.reset();
-          // mouse repulsion
+          // wrap around to keep count stable and smooth (rather than bounce)
+          if (this.x < -20) this.x = w + 20;
+          if (this.x > w + 20) this.x = -20;
+          if (this.y < -20) this.y = h + 20;
+          if (this.y > h + 20) this.y = -20;
+
+          // mouse repulsion (use throttled mouse)
           if (mouse.x !== null && mouse.y !== null) {
             const dx = mouse.x - this.x;
             const dy = mouse.y - this.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
             if (dist < mouse.radius) {
               const force = (mouse.radius - dist) / mouse.radius;
-              this.x -= (dx / dist) * force * 4 * (1 + this.z);
-              this.y -= (dy / dist) * force * 4 * (1 + this.z);
+              this.x -= (dx / dist) * force * 3 * (1 + this.z);
+              this.y -= (dy / dist) * force * 3 * (1 + this.z);
             }
           }
         }
-        draw() {
+        draw(useShadow) {
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size * (1 + this.z * 0.6), 0, Math.PI * 2);
+          ctx.arc(this.x, this.y, this.size * (1 + this.z * 0.4), 0, Math.PI * 2);
           ctx.fillStyle = getParticleColor();
-          ctx.shadowColor = getParticleColor();
-          ctx.shadowBlur = 16 * (1 + this.z);
+          if (useShadow) {
+            ctx.shadowColor = getParticleColor();
+            ctx.shadowBlur = 10 * (1 + this.z);
+          } else {
+            ctx.shadowBlur = 0;
+          }
           ctx.fill();
         }
       }
 
-      function initParticles() {
-        particles.length = 0;
-        const count = lowPerf ? Math.max(20, Math.floor(COUNT / 3)) : COUNT;
-        for (let i = 0; i < count; i++) particles.push(new Particle());
+      function buildGrid() {
+        grid = new Map();
       }
 
-      // connection lines
-      function connect() {
+      function gridKey(cx, cy) { return (cx << 16) ^ cy; } // cheap key
+      function insertToGrid(p, idx) {
+        const cx = Math.floor(p.x / gridSize);
+        const cy = Math.floor(p.y / gridSize);
+        const k = gridKey(cx, cy);
+        if (!grid.has(k)) grid.set(k, []);
+        grid.get(k).push(idx);
+      }
+
+      function getNearbyIndexes(p) {
+        const cx = Math.floor(p.x / gridSize);
+        const cy = Math.floor(p.y / gridSize);
+        const res = [];
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            const k = gridKey(cx + dx, cy + dy);
+            const arr = grid.get(k);
+            if (arr) res.push(...arr);
+          }
+        }
+        return res;
+      }
+
+      function regenerateParticles() {
+        particles = [];
+        // if lowPerf, reduce number aggressively
+        const effectiveCount = lowPerf ? Math.max(18, Math.floor(COUNT / 3)) : COUNT;
+        // also scale down if very small viewport
+        const widthFactor = Math.max(0.5, Math.min(1.6, window.innerWidth / 1366));
+        const finalCount = Math.min(effectiveCount, Math.floor(effectiveCount * widthFactor));
+        for (let i = 0; i < finalCount; i++) particles.push(new Particle());
+      }
+
+      function connectAndDraw() {
+        // spatial hash rebuild
+        buildGrid();
         for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const a = particles[i], b = particles[j];
-            const dx = a.x - b.x, dy = a.y - b.y;
+          insertToGrid(particles[i], i);
+        }
+
+        // drawing
+        // determine whether to use shadows (skip when too many)
+        const useShadow = particles.length < 140;
+        // line width adapt
+        ctx.lineWidth = particles.length < 180 ? 0.9 : 0.5;
+
+        for (let i = 0; i < particles.length; i++) {
+          const a = particles[i];
+          // draw particle
+          a.draw(useShadow);
+
+          // find nearby candidates only
+          const nearby = getNearbyIndexes(a);
+          for (let k = 0; k < nearby.length; k++) {
+            const j = nearby[k];
+            if (j <= i) continue; // avoid double
+            const b = particles[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < MAX_DISTANCE) {
               const opacity = 1 - dist / MAX_DISTANCE;
-              ctx.strokeStyle = getLineColor(opacity * 0.9);
-              ctx.lineWidth = 0.8 * (1 + (a.z + b.z) / 4);
+              ctx.strokeStyle = getLineColor(opacity * 0.85);
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
@@ -215,49 +298,54 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      function loop() {
-        if (paused) { rafId = requestAnimationFrame(loop); return; }
-        ctx.clearRect(0, 0, w, h);
-        particles.forEach(p => { p.update(); p.draw(); });
-        connect();
-        rafId = requestAnimationFrame(loop);
+      function frame() {
+        if (paused) { rafId = requestAnimationFrame(frame); return; }
+        // throttle mouse update via rAF
+        if (mouseDirty) {
+          mouse.x = _mouseX !== null ? _mouseX * (canvas.width / window.innerWidth) : null;
+          mouse.y = _mouseY !== null ? _mouseY * (canvas.height / window.innerHeight) : null;
+          mouseDirty = false;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+        }
+        connectAndDraw();
+        rafId = requestAnimationFrame(frame);
       }
 
-      // mouse interactions
-      window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-      window.addEventListener("mouseleave", () => { mouse.x = null; mouse.y = null; });
-      // click burst
+      // click burst (cheap)
       window.addEventListener("click", (e) => {
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 12; i++) {
           const p = new Particle();
-          p.x = e.clientX + (Math.random() - 0.5) * 12;
-          p.y = e.clientY + (Math.random() - 0.5) * 12;
-          p.speedX = (Math.random() - 0.5) * 6;
-          p.speedY = (Math.random() - 0.5) * 6;
+          p.x = e.clientX * (canvas.width / window.innerWidth) + (Math.random() - 0.5) * 12;
+          p.y = e.clientY * (canvas.height / window.innerHeight) + (Math.random() - 0.5) * 12;
+          p.speedX = (Math.random() - 0.5) * 5;
+          p.speedY = (Math.random() - 0.5) * 5;
           particles.push(p);
         }
-        // trim
-        if (particles.length > 700) particles.splice(0, particles.length - 700);
+        // keep list bounded
+        if (particles.length > 1000) particles.splice(0, particles.length - 1000);
       });
 
-      // Public API for controls
-      function setCount(v) { COUNT = Math.max(10, Math.min(400, Math.floor(v))); initParticles(); }
-      function setDistance(v) { MAX_DISTANCE = Math.max(20, Math.min(500, Number(v))); }
-      function setSpeed(v) { BASE_SPEED = Math.max(0.05, Number(v)); initParticles(); }
+      // public API
+      function setCount(v) { COUNT = Math.max(8, Math.min(SAFE_MAX, Math.floor(v))); regenerateParticles(); }
+      function setDistance(v) { MAX_DISTANCE = Math.max(20, Math.min(500, Number(v))); gridSize = Math.max(60, MAX_DISTANCE); }
+      function setSpeed(v) { BASE_SPEED = Math.max(0.05, Number(v)); regenerateParticles(); }
       function togglePause() { paused = !paused; return paused; }
-      function regenerate() { initParticles(); }
-      function setLowPerf(on) { lowPerf = !!on; initParticles(); }
-      function updateColors() { /* nothing extra to do, color functions read theme */ }
+      function regenerate() { regenerateParticles(); }
+      function setLowPerf(on) { lowPerf = !!on; regenerateParticles(); }
+      function updateColors() { /* colors read theme each draw */ }
 
-      // initialize
-      initParticles();
-      loop();
+      // initial populate & loop
+      regenerateParticles();
+      frame();
 
       return { setCount, setDistance, setSpeed, togglePause, regenerate, setLowPerf, updateColors };
     })();
-  }
+  } // end if canvases present
 
-  /* ============ PARTICLES UI HOOKS ============ */
+  /* ============ UI HOOKS (connect controls) ============ */
   const pcCount = document.getElementById("pc-count");
   const pcDist = document.getElementById("pc-dist");
   const pcSpeed = document.getElementById("pc-speed");
@@ -268,54 +356,56 @@ document.addEventListener("DOMContentLoaded", () => {
   const pcRegenerate = document.getElementById("pc-regenerate");
   const pcLowPerf = document.getElementById("pc-lowperf");
 
-  // wire controls if systems exist
   if (particlesSystem) {
-    pcCount.addEventListener("input", (e) => {
-      const v = e.target.value; pcCountLabel.textContent = v;
-      particlesSystem.setCount(Number(v));
+    // wire sliders with safe guards and labels
+    pcCount?.addEventListener("input", (e) => {
+      const v = Number(e.target.value);
+      pcCountLabel && (pcCountLabel.textContent = v);
+      particlesSystem.setCount(v);
     });
-    pcDist.addEventListener("input", (e) => {
-      const v = e.target.value; pcDistLabel.textContent = v;
-      particlesSystem.setDistance(Number(v));
+    pcDist?.addEventListener("input", (e) => {
+      const v = Number(e.target.value);
+      pcDistLabel && (pcDistLabel.textContent = v);
+      particlesSystem.setDistance(v);
     });
-    pcSpeed.addEventListener("input", (e) => {
-      const v = e.target.value; pcSpeedLabel.textContent = v;
-      particlesSystem.setSpeed(Number(v));
+    pcSpeed?.addEventListener("input", (e) => {
+      const v = Number(e.target.value);
+      pcSpeedLabel && (pcSpeedLabel.textContent = v);
+      particlesSystem.setSpeed(v);
     });
-    pcToggle.addEventListener("click", () => {
+    pcToggle?.addEventListener("click", () => {
       const paused = particlesSystem.togglePause();
       pcToggle.innerHTML = paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
     });
-    pcRegenerate.addEventListener("click", () => particlesSystem.regenerate());
+    pcRegenerate?.addEventListener("click", () => particlesSystem.regenerate());
     let low = false;
-    pcLowPerf.addEventListener("click", () => {
+    pcLowPerf?.addEventListener("click", () => {
       low = !low;
       particlesSystem.setLowPerf(low);
       pcLowPerf.textContent = low ? "Low Perf ✓" : "Low Perf";
     });
   }
 
-  /* ============ Small perf guard: auto low-perf on small screens ============ */
+  /* ===== Auto low-perf for small screens ===== */
   function autoLowPerf() {
     if (!particlesSystem) return;
-    if (window.innerWidth < 720) {
+    if (window.innerWidth < 720 || (window.devicePixelRatio || 1) > 2) {
       particlesSystem.setLowPerf(true);
+      if (pcLowPerf) pcLowPerf.textContent = "Low Perf ✓";
     } else {
       particlesSystem.setLowPerf(false);
+      if (pcLowPerf) pcLowPerf.textContent = "Low Perf";
     }
   }
   autoLowPerf();
-  window.addEventListener("resize", autoLowPerf);
+  window.addEventListener("resize", debounce(autoLowPerf, 200));
 
-  /* ============ Accessibility: keyboard toggle for particles ============ */
-  window.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-      e.preventDefault();
-      if (particlesSystem) {
-        const p = particlesSystem.togglePause();
-        pcToggle.innerHTML = p ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
-      }
-    }
-  });
-
+  /* ===== utilities ===== */
+  function debounce(fn, wait = 100) {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn(...args), wait);
+    };
+  }
 });
