@@ -935,3 +935,84 @@ footer {
     height: 220px;
   }
 }
+
+
+
+
+/* =========================================================
+   GLOBAL RESET & VARIABLES
+   (your original CSS kept intact — trimmed here for brevity)
+========================================================= */
+*{margin:0;padding:0;box-sizing:border-box;text-decoration:none;font-family:"Michroma",sans-serif;color:var(--font-color);}
+:root{
+  --background:radial-gradient(circle at top,#0f172a,#020617 60%,#000);
+  --font-color:#f9fafb;
+  --accent:#22d3ee;
+  --accent-strong:#0ea5e9;
+  --secondary:#020617;
+  --card-glass:rgba(15,23,42,0.75);
+  --border-soft:rgba(148,163,184,0.35);
+  --shadow-soft:0 18px 45px rgba(15,23,42,0.9);
+  --transition-fast:0.25s ease;
+}
+body.light-theme{--background:linear-gradient(135deg,#f9fafb,#e5e7eb,#fff);--font-color:#000;--accent:#0ea5e9;--accent-strong:#0284c7;--secondary:#e5e7eb;--card-glass:rgba(255,255,255,0.8);--border-soft:rgba(148,163,184,0.6);--shadow-soft:0 18px 40px rgba(148,163,184,0.65);}
+html{scroll-behavior:smooth;color:var(--font-color);}
+body{background:transparent;min-height:100vh;overflow-x:hidden;}
+/* scrollbar... kept same */
+
+/* =========================================================
+   ANIMATED BACKGROUND + PARTICLES + BLOBS + STARS
+========================================================= */
+.animated-bg{
+  position:fixed;inset:0;z-index:-3;
+  background:linear-gradient(-45deg,#0f172a,#020617,#0ea5e9,#000);
+  background-size:400% 400%;
+  animation:gradientMove 16s ease infinite;
+}
+body.light-theme .animated-bg{
+  background:linear-gradient(-45deg,#f9fafb,#e5e7eb,#bae6fd,#fff);
+}
+@keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+/* stars canvas sits above gradient, below particles */
+#stars{position:fixed;inset:0;z-index:-2;pointer-events:none;}
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none;}
+
+/* floating gradient blobs - subtle, behind everything but above gradient */
+.float-blobs{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.18;mix-blend-mode:screen;transform:translate3d(0,0,0)}
+.blob.b1{width:420px;height:420px;left:-60px;top:10%;background:linear-gradient(135deg,#22d3ee,#0ea5e9)}
+.blob.b2{width:520px;height:520px;right:-120px;top:30%;background:linear-gradient(135deg,#ec4899,#f43f5e);opacity:0.14}
+.blob.b3{width:360px;height:360px;left:10%;bottom:10%;background:linear-gradient(135deg,#34d399,#10b981);opacity:0.12}
+@keyframes blobFloat{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.03)}100%{transform:translateY(0) scale(1)}}
+.blob{animation:blobFloat 9s ease-in-out infinite}
+
+/* Particles control panel */
+#particles-controls{
+  position:fixed;right:18px;bottom:18px;z-index:110;min-width:220px;padding:14px;
+  display:flex;flex-direction:column;gap:10px;border-radius:12px;
+  background:var(--card-glass);border:1px solid var(--border-soft);backdrop-filter:blur(10px);
+  box-shadow:var(--shadow-soft);
+}
+#particles-controls .controls-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#particles-controls .controls-header button{background:transparent;border:none;color:var(--font-color);cursor:pointer;font-size:1rem}
+#particles-controls .control-row{display:flex;flex-direction:column;gap:6px}
+#particles-controls label{font-size:0.75rem;color:rgba(148,163,184,0.95);display:flex;justify-content:space-between}
+#particles-controls input[type="range"]{width:100%}
+#particles-controls .control-actions{display:flex;gap:8px;justify-content:flex-end}
+
+/* small-screen position tweak */
+@media (max-width:720px){
+  #particles-controls{right:8px;left:8px;bottom:12px;min-width:auto;padding:12px}
+  .blob{display:none} /* save perf on tiny devices */
+}
+
+/* =========================================================
+   Your original rules (header, sections, etc.) remain unchanged
+   ... (I left the rest of your existing CSS intact below)
+   For brevity in this reply I assume the rest of your styles
+   from the previous file are appended here unchanged.
+========================================================= */
+
+/* (PASTE THE REST OF YOUR ORIGINAL CSS HERE — header, home, about,
+   skills, projects, contact, footer, media queries, etc.)
+   — Already present in your full file; keep them as-is. */
