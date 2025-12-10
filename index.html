@@ -17,43 +17,31 @@
   <script src="main.js" defer></script>
 </head>
 <body>
-  <!-- Animated BG and layers -->
-  <div class="animated-bg"></div>
-  <canvas id="stars"></canvas>            <!-- subtle twinkle stars -->
-  <canvas id="particles"></canvas>        <!-- main particle network -->
+  <!-- Background layers -->
+  <div class="animated-bg" aria-hidden="true"></div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <canvas id="particles" aria-hidden="true"></canvas>
   <div class="float-blobs" aria-hidden="true">
     <div class="blob b1"></div>
     <div class="blob b2"></div>
     <div class="blob b3"></div>
   </div>
 
-  <!-- Controls Panel -->
-  <div id="particles-controls" class="glass-card lift-hover">
-    <div class="controls-header">
-      <strong>Particles</strong>
-      <button id="pc-toggle" title="Pause/Resume" aria-label="Toggle particles"><i class="fas fa-pause"></i></button>
+  <!-- FPS Meter -->
+  <div id="fps-meter" class="glass-card" aria-hidden="false" title="FPS & auto low-perf control">
+    <div id="fps-values">
+      <div id="fps-now">FPS: —</div>
+      <div id="fps-avg">Avg: —</div>
     </div>
-    <div class="control-row">
-      <label>Count <span id="pc-count-label">90</span></label>
-      <input id="pc-count" type="range" min="20" max="250" step="1" value="90" />
-    </div>
-    <div class="control-row">
-      <label>Distance <span id="pc-dist-label">130</span></label>
-      <input id="pc-dist" type="range" min="60" max="300" step="1" value="130" />
-    </div>
-    <div class="control-row">
-      <label>Speed <span id="pc-speed-label">0.8</span></label>
-      <input id="pc-speed" type="range" min="0.1" max="3" step="0.1" value="0.8" />
-    </div>
-    <div class="control-actions">
-      <button id="pc-regenerate" class="btn-outline">Regenerate</button>
-      <button id="pc-lowperf" class="btn-primary">Low Perf</button>
+    <div id="fps-controls">
+      <button id="fps-auto" class="btn-outline" title="Toggle auto low-perf">Auto</button>
+      <button id="fps-force" class="btn-primary" title="Force low performance">Force Low-Perf</button>
     </div>
   </div>
 
   <!-- PRELOADER -->
-  <div id="preloader">
-    <div class="loader-ring"></div>
+  <div id="preloader" role="status" aria-live="polite">
+    <div class="loader-ring" aria-hidden="true"></div>
     <span>Loading portfolio...</span>
   </div>
 
@@ -61,7 +49,7 @@
   <header>
     <a href="#home" class="logo"><span>J</span>oyceson</a>
 
-    <nav class="center-section">
+    <nav class="center-section" aria-label="Primary">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#project">Projects</a>
@@ -109,7 +97,7 @@
 
       <div class="home-avatar reveal lift-hover">
         <div class="home-avatar-inner">
-          <div class="avatar-glow-ring"></div>
+          <div class="avatar-glow-ring" aria-hidden="true"></div>
           <img src="jd-removebg-preview.png" alt="Joyceson" />
         </div>
       </div>
@@ -125,10 +113,6 @@
           I’m an aspiring frontend developer with a strong interest in modern web
           technologies. I enjoy turning ideas into interfaces that feel intuitive and
           fast, with a focus on responsive layouts and reusable components.
-        </p>
-        <p>
-          I regularly work with HTML, CSS, JavaScript, and React, and I’m actively
-          exploring backend tools like Node.js and Django to become more full-stack.
         </p>
 
         <div class="about-highlights">
@@ -156,39 +140,184 @@
     </div>
   </section>
 
-  <!-- SKILLS -->
+  <!-- SKILLS - IMPROVED -->
   <section id="skills">
-    <h1 class="reveal">Skills</h1>
-    <div class="skill-container">
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Frontend Development</h1>
-        <i class="fab fa-react"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="80"></div>
-          <div class="skill-progress-text">80%</div>
+    <div class="skills-header">
+      <h1 class="reveal">Skills</h1>
+
+      <div class="skills-controls reveal">
+        <div class="skill-filter">
+          <button class="skill-filter-btn active" data-filter="all">All</button>
+          <button class="skill-filter-btn" data-filter="frontend">Frontend</button>
+          <button class="skill-filter-btn" data-filter="backend">Backend</button>
+          <button class="skill-filter-btn" data-filter="mobile">Mobile</button>
+          <button class="skill-filter-btn" data-filter="ai">AI/ML</button>
+          <button class="skill-filter-btn" data-filter="tools">Tools</button>
+          <button class="skill-filter-btn" data-filter="devops">DevOps</button>
         </div>
-        <p class="skill-tags">HTML • CSS • JavaScript • React • Responsive UI</p>
+
+        <div class="skill-sort">
+          <label for="skill-sort-select" class="visually-hidden">Sort skills</label>
+          <select id="skill-sort-select" aria-label="Sort skills">
+            <option value="proficiency">Sort: Proficiency</option>
+            <option value="alpha">Sort: A → Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="skill-grid" id="skill-grid" aria-live="polite">
+      <!-- sample skill cards (same as previous) -->
+      <div class="skill-card reveal" data-category="frontend" data-name="HTML5" data-proficiency="92" data-details="Years:4 • Semantic HTML • Accessibility">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>HTML5</h3>
+          <p class="skill-tag">Markup • Semantics • SEO</p>
+        </div>
+        <div class="skill-tooltip" role="tooltip">Years: 4 · Semantic HTML · Accessibility</div>
       </div>
 
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Backend Development</h1>
-        <i class="fab fa-node-js"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="60"></div>
-          <div class="skill-progress-text">60%</div>
+      <div class="skill-card reveal" data-category="frontend" data-name="CSS3" data-proficiency="90" data-details="Years:4 • Flexbox • Grid • Animations">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
         </div>
-        <p class="skill-tags">Node.js • Express • REST APIs • SQL basics</p>
+        <div class="skill-meta">
+          <h3>CSS3</h3>
+          <p class="skill-tag">Layouts • Animations • Responsive</p>
+        </div>
+        <div class="skill-tooltip">Years: 4 · Flexbox · Grid · Animations</div>
       </div>
 
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>UI / UX Tools & Design </h1>
-        <i class="fab fa-figma"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="70"></div>
-          <div class="skill-progress-text">70%</div>
+      <div class="skill-card reveal" data-category="frontend" data-name="JavaScript" data-proficiency="88" data-details="Years:3 • ES6+ • DOM • Async">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
         </div>
-        <p class="skill-tags">Wireframes • Prototypes • Figma • Design Systems</p>
+        <div class="skill-meta">
+          <h3>JavaScript</h3>
+          <p class="skill-tag">ES6 • DOM • Async • Tooling</p>
+        </div>
+        <div class="skill-tooltip">Years: 3 · ES6+ · Async · DOM</div>
       </div>
+
+      <div class="skill-card reveal" data-category="frontend" data-name="React" data-proficiency="82" data-details="Years:2 • Hooks • State • VDOM">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>React</h3>
+          <p class="skill-tag">Hooks • Components • State</p>
+        </div>
+        <div class="skill-tooltip">Years: 2 · Hooks · Component Design</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="backend" data-name="Node.js" data-proficiency="70" data-details="Express • REST • APIs">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>Node.js</h3>
+          <p class="skill-tag">Express • APIs • Auth</p>
+        </div>
+        <div class="skill-tooltip">APIs, Express, JWT, Middleware</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="backend" data-name="Django" data-proficiency="60" data-details="Python • ORM • Admin">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>Django</h3>
+          <p class="skill-tag">Python • ORM • Admin</p>
+        </div>
+        <div class="skill-tooltip">REST, ORM, Admin customizations</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="mobile" data-name="Flutter" data-proficiency="74" data-details="Dart • Widgets • State">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>Flutter</h3>
+          <p class="skill-tag">Dart • Widgets • Responsive</p>
+        </div>
+        <div class="skill-tooltip">Cross-platform mobile UIs</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="ai" data-name="AI / ML" data-proficiency="50" data-details="Models • Libraries • Experiments">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>AI / ML</h3>
+          <p class="skill-tag">ML basics • Python • Tools</p>
+        </div>
+        <div class="skill-tooltip">Exploring models, data prep, experimentation</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="tools" data-name="Git" data-proficiency="82" data-details="Version Control • Branching">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>Git</h3>
+          <p class="skill-tag">Version Control • PRs</p>
+        </div>
+        <div class="skill-tooltip">Branching, PRs, Rebase, CI hooks</div>
+      </div>
+
+      <div class="skill-card reveal" data-category="devops" data-name="Docker" data-proficiency="55" data-details="Containers • Images">
+        <div class="skill-svg">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <path class="circle" stroke-dasharray="0,100" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831"/>
+            <text x="18" y="20.35" class="percentage">0%</text>
+          </svg>
+        </div>
+        <div class="skill-meta">
+          <h3>Docker</h3>
+          <p class="skill-tag">Containers • Images</p>
+        </div>
+        <div class="skill-tooltip">Images, Compose, lightweight containerization</div>
+      </div>
+
     </div>
   </section>
 
@@ -202,50 +331,76 @@
       <button class="filter-btn" data-filter="ui">UI Design</button>
     </div>
 
-    <div class="projects-list">
-      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
-        <div class="projectImg">
-          <img src="project-1.jpg" alt="Smart Attendance System" />
-        </div>
-        <div class="projectText">
-          <h1>Smart <span>Attendance System</span></h1>
-          <p>
-            A web-based attendance platform using QR and facial recognition concepts
-            to streamline student check-ins and reduce manual errors.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
+    <div class="projects-wrap">
+      <button class="proj-nav proj-prev" aria-label="Previous project"><i class="fas fa-chevron-left"></i></button>
+
+      <div class="projects-list" id="projects-list" role="list" aria-label="Project carousel">
+        <article class="projects-card glass-card lift-hover reveal" data-category="web ui" role="listitem" tabindex="0" data-images='["project-1.jpg","project-1-2.jpg"]' data-title="Smart Attendance System" data-desc="QR-based attendance with geofencing.">
+          <div class="projectImg">
+            <img src="project-1.jpg" alt="Smart Attendance System" loading="lazy" />
+          </div>
+          <div class="projectText">
+            <h1>Smart <span>Attendance System</span></h1>
+            <p>A web-based attendance platform using QR and facial recognition concepts to streamline student check-ins.</p>
+            <div class="project-actions">
+              <a href="#" class="btn-outline view-details">View Details</a>
+              <a href="#" class="btn-primary" target="_blank">Open Live</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="projects-card glass-card lift-hover reveal" data-category="web" role="listitem" tabindex="0" data-images='["project-2.jpg"]' data-title="E-Commerce Frontend" data-desc="Modern storefront with local cart">
+          <div class="projectImg">
+            <img src="project-2.jpg" alt="E-Commerce UI" loading="lazy" />
+          </div>
+          <div class="projectText">
+            <h1>E<span>-Commerce</span> Frontend</h1>
+            <p>A modern storefront with product listing, filters, search, and cart simulation using localStorage.</p>
+            <div class="project-actions">
+              <a href="#" class="btn-outline view-details">View Details</a>
+              <a href="#" class="btn-primary">Open Live</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="projects-card glass-card lift-hover reveal" data-category="web ui" role="listitem" tabindex="0" data-images='["project-3.jpg"]' data-title="Netflix Inspired UI" data-desc="Hero banner and category rows.">
+          <div class="projectImg">
+            <img src="project-3.jpg" alt="Netflix Clone" loading="lazy" />
+          </div>
+          <div class="projectText">
+            <h1>Net<span>flix</span> Inspired UI</h1>
+            <p>A Netflix-style interface with category rows, hover effects, hero banner, and movie sections designed to feel smooth and engaging.</p>
+            <div class="project-actions">
+              <a href="#" class="btn-outline view-details">View Details</a>
+              <a href="#" class="btn-primary">Open Live</a>
+            </div>
+          </div>
+        </article>
       </div>
 
-      <div class="projects-card glass-card lift-hover reveal" data-category="web">
-        <div class="projectImg">
-          <img src="project-2.jpg" alt="E-Commerce UI" />
-        </div>
-        <div class="projectText">
-          <h1>E<span>-Commerce</span> Frontend</h1>
-          <p>
-            A modern storefront with product listing, filters, search, and cart
-            simulation using localStorage. Fully responsive with clean, minimal UI.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
-      </div>
+      <button class="proj-nav proj-next" aria-label="Next project"><i class="fas fa-chevron-right"></i></button>
+    </div>
 
-      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
-        <div class="projectImg">
-          <img src="project-3.jpg" alt="Netflix Clone" />
-        </div>
-        <div class="projectText">
-          <h1>Net<span>flix</span> Inspired UI</h1>
-          <p>
-            A Netflix-style interface with category rows, hover effects, hero banner,
-            and movie sections designed to feel smooth and engaging.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
+    <div class="proj-indicators" id="proj-indicators" aria-hidden="false"></div>
+  </section>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-inner glass-card">
+      <button id="modal-close" class="modal-close" aria-label="Close modal">&times;</button>
+      <h3 id="modal-title"></h3>
+      <p id="modal-desc"></p>
+      <div class="modal-carousel">
+        <button id="modal-prev" class="modal-nav" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+        <img id="modal-img" src="" alt="" />
+        <button id="modal-next" class="modal-nav" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="modal-actions">
+        <a id="modal-live" class="btn-outline" href="#" target="_blank">Open Live</a>
+        <a id="modal-code" class="btn-primary" href="#" target="_blank">View Code</a>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- CONTACT -->
   <section id="contact">
@@ -255,7 +410,7 @@
       to reach out using the form below.
     </p>
 
-    <form class="glass-card reveal">
+    <form class="glass-card reveal" id="contact-form">
       <input type="text" placeholder="Your Name" required />
       <input type="email" placeholder="Your Email" required />
       <textarea placeholder="Your Message" rows="4" required></textarea>
