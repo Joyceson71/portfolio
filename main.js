@@ -1,236 +1,64 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const body = document.body;
-  const themeToggle = document.getElementById("themeToggle");
-  const menuToggle = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".center-section");
-  const navLinks = nav.querySelectorAll("a");
-  const filterButtons = document.querySelectorAll(".filter-btn");
-  const projectCards = document.querySelectorAll(".projects-card");
-  const preloader = document.getElementById("preloader");
-  const revealEls = document.querySelectorAll(".reveal");
-
-  /* ============ PRELOADER ============ */
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      preloader.classList.add("hidden");
-    }, 400);
-  });
-
-  /* ============ THEME TOGGLE ============ */
-  const savedTheme = localStorage.getItem("jd-theme");
-  if (savedTheme === "light") {
-    body.classList.add("light-theme");
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-  }
-
-  themeToggle.addEventListener("click", () => {
-    body.classList.toggle("light-theme");
-    const isLight = body.classList.contains("light-theme");
-    themeToggle.innerHTML = isLight
-      ? '<i class="fas fa-moon"></i>'
-      : '<i class="fas fa-sun"></i>';
-    localStorage.setItem("jd-theme", isLight ? "light" : "dark");
-  });
-
-  /* ============ MOBILE MENU ============ */
-  menuToggle.addEventListener("click", () => {
-    nav.classList.toggle("open");
-  });
-
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("open");
-    });
-  });
-
-  /* ============ SCROLL REVEAL + SKILL BARS ============ */
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-
-          // animate skill bars when skill-box visible
-          if (entry.target.classList.contains("skill-box")) {
-            const bars = entry.target.querySelectorAll(".skill-progress-fill");
-            bars.forEach((bar) => {
-              const value = bar.getAttribute("data-skill") || 0;
-              bar.style.width = value + "%";
-            });
-          }
-
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.25 }
-  );
-
-  revealEls.forEach((el) => observer.observe(el));
-
-  /* ============ PROJECT FILTERING ============ */
-  filterButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const filter = btn.dataset.filter;
-
-      filterButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      projectCards.forEach((card) => {
-        const categories = (card.dataset.category || "").split(" ");
-        if (filter === "all" || categories.includes(filter)) {
-          card.style.display = "flex";
-        } else {
-          card.style.display = "none";
-        }
-      });
-    });
-  });
-
-  /* ============ 3D PARTICLES BACKGROUND ============ */
-  const canvas = document.getElementById("particles");
-  if (canvas && canvas.getContext) {
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    const particles = [];
-    const PARTICLE_COUNT = 90;
-    const MAX_DISTANCE = 130;
-
-    const mouse = {
-      x: null,
-      y: null,
-      radius: 180,
-    };
-
-    window.addEventListener("mousemove", (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-
-    window.addEventListener("mouseleave", () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    function getParticleColor() {
-      // darker / neon teal in dark mode, brighter blue in light mode
-      return body.classList.contains("light-theme")
-        ? "rgba(14,165,233,0.9)"
-        : "rgba(34,211,238,0.95)";
-    }
-
-    function getLineColor(opacity) {
-      return body.classList.contains("light-theme")
-        ? `rgba(14,165,233,${opacity})`
-        : `rgba(34,211,238,${opacity})`;
-    }
-
-    class Particle {
-      constructor() {
-        this.reset(true);
-      }
-
-      reset(initial = false) {
-        // When initial, spawn anywhere. Later respawns can come from edges.
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2.8 + 0.8;
-        this.speedX = (Math.random() - 0.5) * 0.8;
-        this.speedY = (Math.random() - 0.5) * 0.8;
-        if (!initial && Math.random() > 0.5) {
-          // Re-enter from random edge for a more "3D field" feel
-          const edge = Math.floor(Math.random() * 4);
-          if (edge === 0) this.y = 0;
-          if (edge === 1) this.y = canvas.height;
-          if (edge === 2) this.x = 0;
-          if (edge === 3) this.x = canvas.width;
-        }
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        // bounce on edges
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
-        // mouse repulsion for pseudo-3D parallax
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < mouse.radius) {
-            const forceDirectionX = dx / distance;
-            const forceDirectionY = dy / distance;
-            const maxForce = 4;
-            const force = (mouse.radius - distance) / mouse.radius;
-            const directionX = forceDirectionX * force * maxForce;
-            const directionY = forceDirectionY * force * maxForce;
-            this.x -= directionX;
-            this.y -= directionY;
-          }
-        }
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = getParticleColor();
-        ctx.shadowColor = getParticleColor();
-        ctx.shadowBlur = 18;
-        ctx.fill();
-      }
-    }
-
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-      }
-    }
-
-    function connectParticles() {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < MAX_DISTANCE) {
-            const opacity = 1 - distance / MAX_DISTANCE;
-            ctx.strokeStyle = getLineColor(opacity * 0.9);
-            ctx.lineWidth = 0.8;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
-
-      connectParticles();
-      requestAnimationFrame(animate);
-    }
-
-    initParticles();
-    animate();
-  }
+const cur=document.getElementById('cur'),smear=document.getElementById('smear');
+let mx=0,my=0,lx=0,ly=0;
+document.addEventListener('mousemove',e=>{
+  lx=mx;ly=my;mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  const dx=mx-lx,dy=my-ly;
+  const angle=Math.atan2(dy,dx)*180/Math.PI;
+  const speed=Math.min(Math.sqrt(dx*dx+dy*dy),40);
+  smear.style.left=mx+'px';smear.style.top=my+'px';
+  smear.style.transform=`translate(-50%,-50%) rotate(${angle}deg) scaleX(${1+speed/20})`;
+  smear.style.opacity=(speed/40)*0.6+'';
 });
+document.querySelectorAll('a,button,.pc,.sk-box').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('mag'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('mag'));
+});
+
+// Ink splash canvas
+const canvas=document.getElementById('splash'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const particles=[];
+for(let i=0;i<80;i++){
+  const type=Math.random()<0.6?'cyan':'mag';
+  particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.5+0.5,life:Math.random()*300,maxLife:300,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,type});
+}
+function drawSplash(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.life=(p.life+1)%p.maxLife;p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;
+    const t=p.life/p.maxLife;
+    const a=(t<0.15?t/0.15:t>0.85?1-(t-0.85)/0.15:1)*0.07;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.type==='cyan'?`rgba(0,245,255,${a})`:`rgba(255,0,128,${a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawSplash);
+}
+drawSplash();
+
+// Reveal
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('v');
+      e.target.querySelectorAll('.bar-fill').forEach(b=>b.style.width=(b.dataset.v||0)+'%');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.reveal,.rev-l,.rev-r,.s-eyebrow').forEach(el=>io.observe(el));
+
+// Filter
+document.querySelectorAll('.fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f=b.dataset.f;
+    document.querySelectorAll('.pc').forEach(c=>{c.style.display=(f==='all'||(c.dataset.cat||'').includes(f))?'':'none';});
+  });
+});
+// Menu
+document.getElementById('menuBtn').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));

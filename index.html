@@ -1,268 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Joyceson | Frontend Developer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Icons & Font -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Michroma&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="icon" href="jd-removebg-preview.png" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- JS -->
-  <script src="main.js" defer></script>
+<meta charset="UTF-8"/>
+<title>Joyceson | Neon Ink Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <!-- ANIMATED BG + PARTICLES (behind everything) -->
-  <div class="animated-bg"></div>
-  <canvas id="particles"></canvas>
+<div class="cur" id="cur"></div>
+<div class="cur-smear" id="smear"></div>
+<canvas id="splash"></canvas>
+<div class="bleed-pool bp1"></div>
+<div class="bleed-pool bp2"></div>
+<div class="bleed-pool bp3"></div>
 
-  <!-- PRELOADER -->
-  <div id="preloader">
-    <div class="loader-ring"></div>
-    <span>Welcome to my portfolio...</span>
+<!-- HEADER -->
+<header>
+  <a href="#home" class="logo">
+    <span class="logo-bracket">[</span><span class="logo-name">JD</span><span class="logo-bracket">]</span>
+  </a>
+  <nav id="nav">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#project">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hdr-right">
+    <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+    <a href="assets/Joyceson-CV.pdf" target="_blank" class="hdr-btn">Resume</a>
   </div>
+</header>
 
-  <!-- HEADER -->
-  <header>
-    <a href="#home" class="logo"><span>J</span>D</a>
-
-    <nav class="center-section">
-      <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#project">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="right-section">
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-        <i class="fas fa-sun"></i>
-      </button>
-      <button class="menu-toggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- HOME -->
-  <section id="home">
-    <div class="home-inner">
-      <div class="text-section reveal">
-        <h1>Portfolio 2026</h1>
-        <h2>Hi, I’m <span>Joyceson</span></h2>
-        <h3>Frontend Developer & UI Enthusiast</h3>
-        <p>
-          I design and build responsive, performance-focused web interfaces with a strong
-          attention to detail. My focus is on clean layouts, smooth interactions, and
-          practical, real-world solutions.
-        </p>
-
-        <div class="btn-section">
-          <a href="#contact" class="btn-primary lift-hover">
-            Hire Me
-            <i class="fas fa-arrow-right"></i>
-          </a>
-          <a href="Joyceson-CV.pdf" target="_blank" class="btn-outline lift-hover">
-            View Resume
-          </a>
-        </div>
-
-        <div class="home-stats">
-          <span>Projects: 10+</span>
-          <span>Tech: React • JS • CSS</span>
-        </div>
+<!-- HOME -->
+<section id="home">
+  <div class="home-grid">
+    <div class="home-text reveal">
+      <span class="tag-line">Portfolio 2026 · Frontend Dev</span>
+      <div class="big-name">
+        <span class="line1">Hi, I'm</span>
+        <span class="name-glow" data-t="Joyceson">Joyceson</span>
       </div>
-
-      <div class="home-avatar reveal lift-hover jd-image">
-        <div class="home-avatar-inner">
-          <div class="avatar-glow-ring"></div>
-          <img src="jd-removebg-preview.png" alt="Joyceson"/>
+      <div class="ink-runs"><div class="irun"></div><div class="irun"></div><div class="irun"></div></div>
+      <p class="role-line">Frontend Developer<span class="cursor-blink"></span></p>
+      <p class="hero-desc">I design and build responsive, performance-focused web interfaces. Clean layouts, smooth interactions, and real-world solutions — one pixel at a time.</p>
+      <div class="data-row">
+        <div class="d-item"><span class="d-n">10+</span><span class="d-l">Projects</span></div>
+        <div class="d-item"><span class="d-n">React</span><span class="d-l">Core Stack</span></div>
+        <div class="d-item"><span class="d-n">UI/UX</span><span class="d-l">Focus Area</span></div>
+      </div>
+      <div class="btns">
+        <a href="#contact" class="btn-neon"><span><i class="fas fa-bolt"></i> Hire Me</span></a>
+        <a href="Joyceson-CV.pdf" target="_blank" class="btn-mag"><i class="fas fa-download"></i> Resume</a>
+      </div>
+    </div>
+    <div class="avatar-zone rev-r">
+      <div class="av-frame">
+        <img class="av-img" src="assets/jd-removebg-preview.png" alt="Joyceson"/>
+        <div class="av-overlay"></div>
+        <div class="av-scan"></div>
+        <div class="av-label">
+          <span class="av-name">Joyceson · FE Dev</span>
+          <div class="av-dot"></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-inner">
-      <div class="about-text-section reveal">
-        <h1>About <span>Me</span></h1>
-        <p>
-          I’m an aspiring frontend developer with a strong interest in modern web
-          technologies. I enjoy turning ideas into interfaces that feel intuitive and
-          fast, with a focus on responsive layouts and reusable components.
-        </p>
-        <p>
-          I regularly work with HTML, CSS, JavaScript, and React, and I’m actively
-          exploring backend tools like Node.js and Django to become more full-stack.
-        </p>
-
-        <div class="about-highlights">
-          <span class="about-pill">Pixel-perfect Layouts</span>
-          <span class="about-pill">Responsive Design</span>
-          <span class="about-pill">Performance Mindset</span>
-        </div>
-
-        <div class="about-social-icons">
-          <a href="https://github.com/Joyceson71" target="_blank" aria-label="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://linkedin.com/in/joyceson-danielraj" target="_blank" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="https://instagram.com/j_d_2_8_" target="_blank" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-        </div>
+<!-- ABOUT -->
+<section id="about" class="sec sec-dark">
+  <div class="sec-head">
+    <span class="s-eyebrow reveal">// 01 — About</span>
+    <h2 class="s-title reveal">About <span class="hi">Me</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="abt-body rev-l">
+      <p>I'm an aspiring frontend developer with a strong interest in modern web technologies. I enjoy turning ideas into interfaces that feel intuitive and fast, with a focus on responsive layouts and reusable components.</p>
+      <p>I regularly work with HTML, CSS, JavaScript, and React, and I'm actively exploring backend tools like Node.js and Django to become more full-stack.</p>
+      <div class="neon-divider"></div>
+      <div class="pill-row">
+        <span class="pill">Pixel-perfect</span>
+        <span class="pill">Responsive</span>
+        <span class="pill">Performance</span>
+        <span class="pill">Clean Code</span>
       </div>
-
-      <div class="about-img-section reveal lift-hover glass-card">
-        <img src="jd-removebg-preview.png" alt="Joyceson working" />
+      <div class="soc-row">
+        <a href="https://github.com/Joyceson71" target="_blank" class="soc"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/joyceson-danielraj" target="_blank" class="soc"><i class="fab fa-linkedin"></i></a>
+        <a href="https://instagram.com/j_d_2_8_" target="_blank" class="soc"><i class="fab fa-instagram"></i></a>
       </div>
     </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills">
-    <h1 class="reveal">Skills</h1>
-    <div class="skill-container">
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Frontend Development</h1>
-        <i class="fab fa-react"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="80"></div>
-          <div class="skill-progress-text">80%</div>
-        </div>
-        <p class="skill-tags">HTML • CSS • JavaScript • React • Responsive UI</p>
+    <div class="rev-r">
+      <div class="abt-img-frame">
+        <img src="assets/jd-removebg-preview.png" alt="Joyceson"/>
       </div>
-
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Backend Development</h1>
-        <i class="fab fa-node-js"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="60"></div>
-          <div class="skill-progress-text">60%</div>
-        </div>
-        <p class="skill-tags">Node.js • Express • REST APIs • SQL basics</p>
-      </div>
-
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>UI / UX Tools & Design </h1>
-        <i class="fab fa-figma"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="70"></div>
-          <div class="skill-progress-text">70%</div>
-        </div>
-        <p class="skill-tags">Wireframes • Prototypes • Figma • Design Systems</p>
-      </div>
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Mobile-App Development</h1>
-        <i class="fab fa-android"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="30"></div>
-          <div class="skill-progress-text">30%</div>
-        </div>
-        <p class="skill-tags">React-Native • Prototypes • Flutter • Flutterflow</p>
-      </div>
-      <div class="skill-box glass-card lift-hover reveal">
-        <h1>Version control & Tools</h1>
-        <i class="fab fa-github"></i>
-        <div class="skill-progress">
-          <div class="skill-progress-fill" data-skill="90"></div>
-          <div class="skill-progress-text">90%</div>
-        </div>
-        <p class="skill-tags">Git • GitHub • VS-code • Postman</p>
-      </div>
+      <div class="img-footer"><span>Joyceson · 2026</span><span>Frontend Dev</span></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- PROJECTS -->
-  <section id="project">
-    <h1 class="reveal">Projects</h1>
+<!-- SKILLS -->
+<section id="skills" class="sec">
+  <div class="sec-head">
+    <span class="s-eyebrow reveal">// 02 — Skills</span>
+    <h2 class="s-title reveal">Skill <span class="hi">Stack</span></h2>
+  </div>
+  <div class="sk-max">
+    <div class="sk-box reveal"><div class="sk-top-row"><span class="sk-nm">Frontend Dev</span><i class="fab fa-react sk-ico"></i></div><div class="bar-pct">80%</div><div class="bar-bg"><div class="bar-fill" data-v="80"></div></div><div class="bar-tags">HTML · CSS · JavaScript · React · Responsive UI</div></div>
+    <div class="sk-box reveal" style="transition-delay:0.07s"><div class="sk-top-row"><span class="sk-nm">Backend Dev</span><i class="fab fa-node-js sk-ico"></i></div><div class="bar-pct">60%</div><div class="bar-bg"><div class="bar-fill" data-v="60"></div></div><div class="bar-tags">Node.js · Express · REST APIs · SQL</div></div>
+    <div class="sk-box reveal" style="transition-delay:0.14s"><div class="sk-top-row"><span class="sk-nm">UI / UX Design</span><i class="fab fa-figma sk-ico"></i></div><div class="bar-pct">70%</div><div class="bar-bg"><div class="bar-fill" data-v="70"></div></div><div class="bar-tags">Figma · Wireframes · Prototypes · Design Systems</div></div>
+    <div class="sk-box reveal" style="transition-delay:0.21s"><div class="sk-top-row"><span class="sk-nm">Mobile Dev</span><i class="fab fa-android sk-ico"></i></div><div class="bar-pct">30%</div><div class="bar-bg"><div class="bar-fill" data-v="30"></div></div><div class="bar-tags">React Native · Flutter · FlutterFlow</div></div>
+    <div class="sk-box reveal" style="transition-delay:0.28s"><div class="sk-top-row"><span class="sk-nm">Version Control</span><i class="fab fa-github sk-ico"></i></div><div class="bar-pct">90%</div><div class="bar-bg"><div class="bar-fill" data-v="90"></div></div><div class="bar-tags">Git · GitHub · VS Code · Postman</div></div>
+  </div>
+</section>
 
-    <div class="projects-filter reveal">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="web">Web Apps</button>
-      <button class="filter-btn" data-filter="ui">UI Design</button>
+<!-- PROJECTS -->
+<section id="project" class="sec sec-dark">
+  <div class="sec-head">
+    <span class="s-eyebrow reveal">// 03 — Projects</span>
+    <h2 class="s-title reveal">Project <span class="hi">Log</span></h2>
+  </div>
+  <div class="proj-max">
+    <div class="filter-row reveal">
+      <button class="fb on" data-f="all">All</button>
+      <button class="fb" data-f="web">Web Apps</button>
+      <button class="fb" data-f="ui">UI Design</button>
     </div>
-
-    <div class="projects-list">
-      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
-        <div class="projectImg">
-          <img src="project-1.jpg" alt="Smart Attendance System" />
-        </div>
-        <div class="projectText">
-          <h1>Smart <span>Attendance System</span></h1>
-          <p>
-            A web-based attendance platform using QR and facial recognition concepts
-            to streamline student check-ins and reduce manual errors.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
-      </div>
-
-      <div class="projects-card glass-card lift-hover reveal" data-category="web">
-        <div class="projectImg">
-          <img src="project-2.jpg" alt="E-Commerce UI" />
-        </div>
-        <div class="projectText">
-          <h1>E<span>-Commerce</span> Frontend</h1>
-          <p>
-            A modern storefront with product listing, filters, search, and cart
-            simulation using localStorage. Fully responsive with clean, minimal UI.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
-      </div>
-
-      <div class="projects-card glass-card lift-hover reveal" data-category="web ui">
-        <div class="projectImg">
-          <img src="project-3.jpg" alt="Netflix Clone" />
-        </div>
-        <div class="projectText">
-          <h1>Net<span>flix</span> Inspired UI</h1>
-          <p>
-            A Netflix-style interface with category rows, hover effects, hero banner,
-            and movie sections designed to feel smooth and engaging.
-          </p>
-          <a href="#" class="btn-outline">View Project</a>
-        </div>
-      </div>
+    <div class="proj-grid">
+      <div class="pc reveal" data-cat="web ui"><div class="pc-img"><img src="assets/project-1.jpg" alt="Attendance"/></div><div class="pc-body"><div class="pc-ref">PRJ-001</div><div class="pc-title">Smart <span>Attendance</span> System</div><p class="pc-p">QR & facial recognition concepts to streamline student check-ins and reduce manual errors.</p><a href="#" class="pc-link"><i class="fas fa-external-link-alt"></i> View Project</a></div></div>
+      <div class="pc reveal" data-cat="web"><div class="pc-img"><img src="assets/project-2.jpg" alt="E-Commerce"/></div><div class="pc-body"><div class="pc-ref">PRJ-002</div><div class="pc-title">E<span>-Commerce</span> Frontend</div><p class="pc-p">Modern storefront with filters, cart simulation, and a clean responsive UI.</p><a href="#" class="pc-link"><i class="fas fa-external-link-alt"></i> View Project</a></div></div>
+      <div class="pc reveal" data-cat="web ui"><div class="pc-img"><img src="assets/project-3.jpg" alt="Netflix"/></div><div class="pc-body"><div class="pc-ref">PRJ-003</div><div class="pc-title">Net<span>flix</span> Inspired UI</div><p class="pc-p">Netflix-style UI with category rows, hover effects, hero banner and smooth interactions.</p><a href="#" class="pc-link"><i class="fas fa-external-link-alt"></i> View Project</a></div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <h1 class="reveal">Contact Me</h1>
-    <p class="reveal">
-      If you’d like to collaborate, discuss a project, or just say hi, feel free
-      to reach out using the form below.
-    </p>
-
-    <form class="glass-card reveal">
-      <input type="text" placeholder="Your Name" required />
-      <input type="email" placeholder="Your Email" required />
-      <textarea placeholder="Your Message" rows="4" required></textarea>
-      <button type="submit" class="btn-primary submit-btn lift-hover">
-        Send Message
-      </button>
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="sec-head">
+    <span class="s-eyebrow reveal">// 04 — Contact</span>
+    <h2 class="s-title reveal">Contact <span class="hi">Me</span></h2>
+  </div>
+  <div class="ct-wrap">
+    <div class="rev-l">
+      <p class="ct-intro">If you'd like to collaborate, discuss a project, or just say hi — feel free to reach out. Always open to exciting opportunities.</p>
+      <div class="ct-item"><i class="fab fa-github ct-icon"></i><span class="ct-val">github.com/Joyceson71</span></div>
+      <div class="ct-item"><i class="fab fa-linkedin ct-icon"></i><span class="ct-val">joyceson-danielraj</span></div>
+      <div class="ct-item"><i class="fab fa-instagram ct-icon"></i><span class="ct-val">@j_d_2_8_</span></div>
+    </div>
+    <form class="neon-form rev-r" onsubmit="return false">
+      <div class="fl"><label class="flabel">Your Name</label><input type="text" class="finput" placeholder="John Doe" required/></div>
+      <div class="fl"><label class="flabel">Email</label><input type="email" class="finput" placeholder="john@example.com" required/></div>
+      <div class="fl"><label class="flabel">Message</label><textarea class="fta" rows="4" placeholder="Let's build something..." required></textarea></div>
+      <button type="submit" class="btn-neon" style="align-self:flex-start"><span><i class="fas fa-paper-plane"></i> Send Message</span></button>
     </form>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    © 2026 Joyceson. Built with clean code, focus, and a bit of creativity.
-  </footer>
+<footer>
+  <span>© 2026 Joyceson · Danielraj</span>
+  <span class="f-glow">BUILT WITH PASSION BY Joyceson</span>
+</footer>
+
+<script src="main.js"></script>
 </body>
 </html>
