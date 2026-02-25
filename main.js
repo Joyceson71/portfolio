@@ -1,37 +1,35 @@
-/* =============================================
-   NEON INK PORTFOLIO — main.js
-   Ink particle canvas · Cursor · Reveal
-   Theme toggle · Mobile optimized
-   Low GPU usage — no WebGL, no 3D
-============================================= */
-
 (function () {
   "use strict";
 
   /* ---- DETECT TOUCH/MOBILE ---- */
-  const isMobile = window.matchMedia("(hover: none)").matches || window.innerWidth < 768;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isMobile =
+    window.matchMedia("(hover: none)").matches || window.innerWidth < 768;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-  /* ============================================
-     CUSTOM CURSOR (desktop only)
-  ============================================= */
   if (!isMobile) {
     const cur = document.getElementById("cur");
     const smear = document.getElementById("smear");
 
-    let mx = 0, my = 0;
-    let lx = 0, ly = 0;
+    let mx = 0,
+      my = 0;
+    let lx = 0,
+      ly = 0;
 
     document.addEventListener("mousemove", (e) => {
-      lx = mx; ly = my;
-      mx = e.clientX; my = e.clientY;
+      lx = mx;
+      ly = my;
+      mx = e.clientX;
+      my = e.clientY;
 
       // Direct position update — no lag on dot
       cur.style.left = mx + "px";
       cur.style.top = my + "px";
 
       // Smear effect: angle + scale based on speed
-      const dx = mx - lx, dy = my - ly;
+      const dx = mx - lx,
+        dy = my - ly;
       const speed = Math.min(Math.sqrt(dx * dx + dy * dy), 40);
       const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
@@ -52,12 +50,15 @@
 
     // Hover states on interactive elements
     const interactEls = document.querySelectorAll(
-      "a, button, .pc, .sk-box, .d-item, .ct-item, .pill, .fb"
+      "a, button, .pc, .sk-box, .d-item, .ct-item, .pill, .fb",
     );
     interactEls.forEach((el) => {
       el.addEventListener("mouseenter", () => {
         cur.classList.add("big");
-        if (el.classList.contains("btn-mag") || el.classList.contains("pc-link")) {
+        if (
+          el.classList.contains("btn-mag") ||
+          el.classList.contains("pc-link")
+        ) {
           cur.classList.add("mag");
         }
       });
@@ -75,7 +76,8 @@
   const canvas = document.getElementById("splash");
   if (canvas) {
     const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-    let W = 0, H = 0;
+    let W = 0,
+      H = 0;
     let animFrame = null;
 
     function resize() {
@@ -125,25 +127,34 @@
         p.y += p.vy;
 
         // Soft boundary bounce
-        if (p.x < 0 || p.x > W) { p.vx *= -1; p.x = Math.max(0, Math.min(W, p.x)); }
-        if (p.y < 0 || p.y > H) { p.vy *= -1; p.y = Math.max(0, Math.min(H, p.y)); }
+        if (p.x < 0 || p.x > W) {
+          p.vx *= -1;
+          p.x = Math.max(0, Math.min(W, p.x));
+        }
+        if (p.y < 0 || p.y > H) {
+          p.vy *= -1;
+          p.y = Math.max(0, Math.min(H, p.y));
+        }
 
         const t = p.life / p.maxLife;
         // Fade in and out
-        const alpha = (t < 0.18 ? t / 0.18 : t > 0.82 ? (1 - t) / 0.18 : 1)
-          * (lightMode ? 0.12 : 0.08);
+        const alpha =
+          (t < 0.18 ? t / 0.18 : t > 0.82 ? (1 - t) / 0.18 : 1) *
+          (lightMode ? 0.12 : 0.08);
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 
         if (lightMode) {
-          ctx.fillStyle = p.type === "cyan"
-            ? `rgba(0,106,255,${alpha})`
-            : `rgba(204,0,102,${alpha})`;
+          ctx.fillStyle =
+            p.type === "cyan"
+              ? `rgba(0,106,255,${alpha})`
+              : `rgba(204,0,102,${alpha})`;
         } else {
-          ctx.fillStyle = p.type === "cyan"
-            ? `rgba(0,245,255,${alpha})`
-            : `rgba(255,0,128,${alpha})`;
+          ctx.fillStyle =
+            p.type === "cyan"
+              ? `rgba(0,245,255,${alpha})`
+              : `rgba(255,0,128,${alpha})`;
         }
         ctx.fill();
       }
@@ -169,7 +180,9 @@
      SCROLL REVEAL — IntersectionObserver
      Triggers ink-reveal class & skill bars
   ============================================= */
-  const revealEls = document.querySelectorAll(".reveal, .rev-l, .rev-r, .s-eyebrow");
+  const revealEls = document.querySelectorAll(
+    ".reveal, .rev-l, .rev-r, .s-eyebrow",
+  );
 
   if (prefersReducedMotion) {
     // Skip animations entirely — just show everything
@@ -192,7 +205,7 @@
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
     );
     revealEls.forEach((el) => revealObserver.observe(el));
   }
@@ -212,9 +225,11 @@
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
-    document.querySelectorAll(".sk-box").forEach((el) => barObserver.observe(el));
+    document
+      .querySelectorAll(".sk-box")
+      .forEach((el) => barObserver.observe(el));
   }
 
   /* ============================================
@@ -256,7 +271,9 @@
       const isOpen = navEl.classList.toggle("open");
       menuBtn.setAttribute("aria-expanded", isOpen.toString());
       // Ink icon swap
-      menuBtn.querySelector("i").className = isOpen ? "fas fa-times" : "fas fa-bars";
+      menuBtn.querySelector("i").className = isOpen
+        ? "fas fa-times"
+        : "fas fa-bars";
     });
 
     // Close on nav link click
@@ -299,7 +316,9 @@
 
     btn.addEventListener("click", () => {
       const isLight = document.body.classList.toggle("light");
-      btn.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+      btn.innerHTML = isLight
+        ? '<i class="fas fa-moon"></i>'
+        : '<i class="fas fa-sun"></i>';
       localStorage.setItem("jd-ink-theme", isLight ? "light" : "dark");
       updatePoolsForTheme(isLight);
     });
@@ -327,7 +346,9 @@
       "React Engineer",
       "Web Craftsman",
     ];
-    let rIdx = 0, cIdx = 0, isTyping = true;
+    let rIdx = 0,
+      cIdx = 0,
+      isTyping = true;
 
     // Preserve the cursor blink span
     const cursorSpan = roleEl.querySelector(".cursor-blink");
@@ -390,11 +411,14 @@
         const speed = Math.random() * 3 + 1.5;
         const type = Math.random() < 0.6 ? "cyan" : "mag";
         splashes.push({
-          x: e.clientX, y: e.clientY,
+          x: e.clientX,
+          y: e.clientY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           r: Math.random() * 3 + 1.5,
-          life: 0, maxLife: 35, type,
+          life: 0,
+          maxLife: 35,
+          type,
         });
       }
 
@@ -404,17 +428,24 @@
           if (s.life >= s.maxLife) return;
           active = true;
           s.life++;
-          s.x += s.vx; s.y += s.vy;
-          s.vx *= 0.9; s.vy *= 0.9;
+          s.x += s.vx;
+          s.y += s.vy;
+          s.vx *= 0.9;
+          s.vy *= 0.9;
 
           const t = s.life / s.maxLife;
           const a = (1 - t) * (isLight ? 0.25 : 0.55);
 
           splashCtx.beginPath();
           splashCtx.arc(s.x, s.y, s.r * (1 - t * 0.5), 0, Math.PI * 2);
-          splashCtx.fillStyle = s.type === "cyan"
-            ? (isLight ? `rgba(0,106,255,${a})` : `rgba(0,245,255,${a})`)
-            : (isLight ? `rgba(204,0,102,${a})` : `rgba(255,0,128,${a})`);
+          splashCtx.fillStyle =
+            s.type === "cyan"
+              ? isLight
+                ? `rgba(0,106,255,${a})`
+                : `rgba(0,245,255,${a})`
+              : isLight
+                ? `rgba(204,0,102,${a})`
+                : `rgba(255,0,128,${a})`;
           splashCtx.fill();
         });
         if (active) requestAnimationFrame(drawSplash);
@@ -450,7 +481,7 @@
       }
       lastScroll = scrollY;
     },
-    { passive: true }
+    { passive: true },
   );
 
   /* ============================================
@@ -488,5 +519,4 @@
       }
     });
   });
-
 })();
